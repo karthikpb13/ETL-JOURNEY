@@ -1,0 +1,45 @@
+
+## Databricks
+## Main Conversion Functions in Databricks SQL
+------------------------------------------------------------------------------------------------------------------------------------
+| Function             | Purpose                                                           | Example                               |
+|----------------------|-------------------------------------------------------------------|---------------------------------------|
+| `CAST()`             | Converts a value to another data type                             | `CAST('123' AS INT)`                  |
+| `TRY_CAST()`         | Converts a value; returns NULL if conversion fails                | `TRY_CAST('abc' AS INT)`              |
+| `TO_DATE()`          | Converts a value to a date, optionally using a format             | `TO_DATE('31/12/2024', 'dd/MM/yyyy')` |
+| `TO_TIMESTAMP()`     | Converts a value to a timestamp                                   | `TO_TIMESTAMP('2024-12-31 10:30:00')` |
+| `TRY_TO_TIMESTAMP()` | Converts to a timestamp; returns NULL if conversion fails         | `TRY_TO_TIMESTAMP('invalid')`         |
+| `TO_NUMBER()`        | Converts formatted numeric text to a number                       | `TO_NUMBER('$1,250.50', '$9,999.99')` |
+| `TRY_TO_NUMBER()`    | Converts formatted numeric text; returns NULL if conversion fails | `TRY_TO_NUMBER('$abc', '$999')`       |
+------------------------------------------------------------------------------------------------------------------------------------
+
+Oracle
+## Main Conversion Functions in Oracle SQL
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+| Function                           | Purpose                                                                          | Example                                                                          |
+|------------------------------------|----------------------------------------------------------------------------------|----------------------------------------------------------------------------------|
+| `CAST()`                           | Converts a value to another data type                                            | `CAST('123' AS NUMBER)`                                                          |
+| `TO_NUMBER()`                      | Converts a string to a number                                                    | `TO_NUMBER('123.45')`                                                            |
+| `TO_CHAR()`                        | Converts a number or date to text                                                | `TO_CHAR(SYSDATE, 'YYYY-MM-DD')`                                                 |
+| `TO_DATE()`                        | Converts a string to a date using a specified format                             | `TO_DATE('31/12/2024', 'DD/MM/YYYY')`                                            |
+| `TO_TIMESTAMP()`                   | Converts a string to a timestamp                                                 | `TO_TIMESTAMP('31/12/2024 10:30:00', 'DD/MM/YYYY HH24:MI:SS')`                   |
+| `TO_TIMESTAMP_TZ()`                | Converts a string to a timestamp with time zone                                  | `TO_TIMESTAMP_TZ('31/12/2024 10:30:00 +05:30', 'DD/MM/YYYY HH24:MI:SS TZH:TZM')` |
+| `VALIDATE_CONVERSION()`            | Checks whether a value can be converted; returns `1` if valid and `0` if invalid | `VALIDATE_CONVERSION('123' AS NUMBER)`                                           |
+| `DEFAULT NULL ON CONVERSION ERROR` | Returns `NULL` instead of raising a conversion error (supported in Oracle 12.2+) | `TO_NUMBER('abc' DEFAULT NULL ON CONVERSION ERROR)`                              |
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+MySQL
+## Main Conversion Functions in MySQL
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+| Function            | Purpose                                                                 | Example                                 |
+|---------------------|-------------------------------------------------------------------------|-----------------------------------------|
+| `CAST()`            | Converts a value to another data type                                   | `CAST('123' AS SIGNED)`                 |
+| `CONVERT()`         | Converts a value to another data type                                   | `CONVERT('123', SIGNED)`                |
+| `DATE()`            | Extracts the date portion from a datetime value                         | `DATE('2024-12-31 10:30:00')`           |
+| `STR_TO_DATE()`     | Converts a string into a date or datetime using a format                | `STR_TO_DATE('31/12/2024', '%d/%m/%Y')` |
+| `DATE_FORMAT()`     | Formats a date or datetime as text                                      | `DATE_FORMAT(NOW(), '%Y-%m-%d')`        |
+| `TIME_FORMAT()`     | Formats a time value as text                                            | `TIME_FORMAT('14:30:00', '%h:%i %p')`   |
+| `UNIX_TIMESTAMP()`  | Converts a date or datetime into Unix timestamp seconds                 | `UNIX_TIMESTAMP('2024-12-31 10:30:00')` |
+| `FROM_UNIXTIME()`   | Converts Unix timestamp seconds into a datetime value or formatted text | `FROM_UNIXTIME(1735641000)`             |
+-------------------------------------------------------------------------------------------------------------------------------------------
