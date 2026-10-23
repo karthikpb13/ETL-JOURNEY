@@ -1,0 +1,149 @@
+
+-- Q1. Display the number of employees in each department.
+select department, count(emp_id) as tot_emp
+from employee
+group by all;
+
+-- Q2. Find the highest salary in each department.
+
+SELECT DEPARTMENT, MAX(SALARY) AS HIGH_SAL
+FROM employee
+GROUP BY ALL;
+-- Q3. Display departments having more than 5 employees.
+
+SELECT DEPARTMENT
+FROM employee
+GROUP BY DEPARTMENT
+HAVING COUNT(EMP_ID) > 5;
+
+-- Q4. Find the average salary of employees in each department.
+
+SELECT DEPARTMENT, AVG(SALARY) AS AVG_SAL
+FROM EMPLOYEE 
+GROUP BY DEPARTMENT;
+
+-- Q5. Display departments whose average salary is greater than 55000.
+
+SELECT DEPARTMENT
+FROM EMPLOYEE 
+GROUP BY DEPARTMENT
+HAVING AVG(SALARY) > 55000;
+-- Q6. Find the employee(s) earning the highest salary in the IT department.
+
+SELECT *
+FROM EMPLOYEE
+WHERE SALARY=(SELECT MAX(SALARY) FROM EMPLOYEE WHERE DEPARTMENT = 'IT');
+
+-- Q7. Which department has the highest average salary?
+
+SELECT DEPARTMENT, AVG(sALARY) AS AVG_SAL
+FROM EMPLOYEE 
+GROUP BY DEPARTMENT
+ORDER BY avg_sal DESC
+LIMIT 1;
+
+-- Q8. Which city has the maximum number of employees? Include ties.
+
+SELECT CITY, COUNT(EMP_ID) AS TOT_EMP
+FROM EMPLOYEE
+GROUP BY CITY
+HAVING COUNT(EMP_ID) = (
+    SELECT MAX(emp_count)
+    FROM (
+        SELECT COUNT(EMP_ID) AS emp_count
+        FROM EMPLOYEE
+        GROUP BY CITY
+    ) city_counts
+);
+
+SELECT * FROM employee;
+
+-- Q9. Display departments where the average salary is above the company-wide average salary.
+
+SELECT DEPARTMENT
+FROM employee
+GROUP BY DEPARTMENT
+HAVING AVG(SALARY) > (SELECT AVG(SALARY) FROM EMPLOYEE);
+
+-- Q10. Display the top 3 departments based on average salary.
+
+SELECT DEPARTMENT
+FROM employee
+GROUP BY DEPARTMENT
+ORDER BY AVG(SALARY) DESC
+LIMIT 3;
+
+-- Q11. Display the top 5 cities based on employee count.
+
+SELECT CITY 
+FROM employee
+GROUP BY CITY
+ORDER BY COUNT(EMP_ID)
+LIMIT 5;
+
+-- Q12. Display departments having more employees than the HR department.
+
+SELECT DEPARTMENT
+FROM EMPLOYEE 
+GROUP BY DEPARTMENT 
+HAVING COUNT(EMP_ID) > (SELECT COUNT(EMP_ID) FROM EMPLOYEE
+                        WHERE DEPARTMENT='HR');
+-- Q13. Display departments where the highest salary is above 75000
+--     and the average salary is above 55000.
+
+SELECT DEPARTMENT
+FROM EMPLOYEE 
+GROUP BY DEPARTMENT
+HAVING MAX(SALARY) > 75000 AND AVG(sALARY) > 55000;
+
+-- Q14. Display cities where employee count is greater than 5
+--     and total salary exceeds 300000.
+
+SELECT CITY 
+FROM employee
+GROUP BY CITY
+HAVING COUNT (EMP_ID) > 5 AND SUM(SALARY) > 300000;
+
+-- Q15. Count employees whose bonus is NULL.
+
+SELECT COUNT(EMP_ID)
+FROM employee
+WHERE BONUS IS NULL;
+
+-- Q16. Find the average salary of employees who received a bonus.
+
+SELECT AVG(SALARY)
+FROM employee
+WHERE BONUS IS NOT NULL;
+
+-- Q17. Count employees in each department hired after 2022.
+
+SELECT DEPARTMENT, COUNT(EMP_ID) AS TOT_EMP
+FROM employee
+WHERE YEAR(JOIN_DATE) = 2022
+GROUP BY DEPARTMENT;
+
+-- Q18. Find the total salary of employees aged between 25 and 35.
+
+SELECT SUM(SALARY) AS TOT_SAL
+FROM EMPLOYEE
+WHERE AGE BETWEEN 25 AND 35;
+
+-- Q19. Display departments whose total bonus is greater than the total bonus of HR.
+
+SELECT DEPARTMENT
+FROM employee
+GROUP BY ALL
+HAVING SUM(BONUS) > (SELECT SUM(BONUS) FROM EMPLOYEE WHERE DEPARTMENT='HR');
+
+-- Q20. Generate a department-wise report showing:
+--     Department, employee count, total salary, average salary,
+--     highest salary, lowest salary, total bonus, and average bonus.
+--     Order by total salary in descending order.
+
+SELECT DEPARTMENT, COUNT(EMP_ID) AS TOT_EMP, 
+        SUM(SALARY ) AS TOT_SAL, round(AVG(SALARY)) AS AVG_SAL,
+        MAX(SALARY) AS HIGH_SAL, MIN(SALARY) AS LOW_SAL,
+        SUM(BONUS) AS TOT_BONUS, ROUND(AVG(BONUS)) AS AVG_BONUS
+FROM employee
+GROUP BY DEPARTMENT;
