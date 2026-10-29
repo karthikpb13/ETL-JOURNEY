@@ -1,0 +1,104 @@
+1)  In an ETL project, the first time data is loaded into the target table, 5,000 records are loaded. 
+    Later, an incremental load adds another 500 records, so the target now has 5,500 records. 
+    The source now has 6,000 records. The team then deletes all the data from the target table and reloads all 6,000 records from the source.
+    What is this load called? And what type of load will run after it?
+Answer:
+    The delete-and-reload of all 6,000 records is called a Full Refresh (also known as a Full Reload or Truncate and Load).
+    The loads after that go back to Incremental (Delta) Load.
+
+--------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Why we are storing the data in s3
+--> Upstream Testing
+--> Data Retention Policy ( Till 6 months ) 
+--> After 6 months data will be moved to 
+** Storage Classes of AWS S3
+Typical lifecycle for raw data
+Day 0-30: S3 Standard (just landed, being processed and validated)
+After 30 days: Standard-IA (occasional reprocessing)
+After 90 days: Glacier Flexible Retrieval
+After 180+ days: Deep Archive, optionally with an expiry rule after the retention period ends
+
+Then S3 contains all type of data and from s3 only the data present in accurate format , Naming Conventions will move to RAW folder
+
+When data moving from s3 to RAW
+--> Only the required data will be moved to RAW data 
+--> RAW folder contains the data in original format 
+--> And from RAW data will be moved to Cleansed folder 
+
+
+When Data Moving from RAW to CLEANSED
+--> Data will be cleansed
+--> Data will be converted in standard format 
+--> Unwanted Spaces will be removed
+--> Necessary case will be applied
+--> Audit Columns will be applied (Like Batch_id, load_timestamp, is_active)
+--> And then for further processing data will be moved from CLEANSED TO CURRATED
+
+
+Moving From CLEANSED TO CURATED 
+--> All the necessary Transformations will be applied
+--> Transformations will be applied according to business requirements
+--> Transformations Like sales_month, Sales_Product_Category, Sales_by_Month, Sales_Customer
+
+
+Pipeline Folders
+--> S3-To-Raw Ingestion
+	--> product_raw_data_ingestion 
+	--> customer_raw_data_ingestion
+	--> orders_raw_data_ingestion
+
+--> Raw-to-Cleansed
+	--> product_cleansed_data_pipeline
+	--> customer_cleansed_data_pipeline
+	--> orders_cleansed_data_pipeline
+
+--> Cleansed-to-curated
+	--> curated_sales_executive_summary
+	--> curated_sales_product
+	--> curated_sales_product_category
+	--> curated_sales_by_month
+	--> curated_sales_by_customer
+
+--> Curated-to-Snowflake
+	--> SF_sales_Executive_Summary
+	--> SF_sales_by_product
+	--> SF_sales_product_category
+	--> SF_sales_by_month
+	--> SF_sales_by_customer
+
+-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+What is dataflow in ADF
+	A data flow in Azure Data Factory is a visual, code-free transformation feature that lets you design data transformation 
+  logic (such as filter, join, aggregate and derive columns) on a graphical canvas. ADF converts the design into Spark code and executes it on a 
+  managed Spark cluster, reading from source datasets and writing the transformed result to sink datasets.
+	    A data flow in ADF is a GUI-based way to build data transformations at scale. You define a source, apply transformations, 
+      and write to a sink, and ADF runs it on a managed Spark cluster without you writing any code
+
+
+Types of DataFlows in ADF
+
+Type                  |						Purpose				                                                      |			Engine
+----------------------|-------------------------------------------------------------------------------|----------------------------------
+Mapping Data Flow     |	Visual, code-free transformations (source → transformations → sink) at scale  |	Managed Spark cluster
+Wrangling Data Flow   |	Power Query-style data preparation with a spreadsheet-like UI		              |	Power Query Online, translated to Spark
+
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Differnce between ETL and ELT
+| Point                        | ETL                                                         | ELT                                                              |
+|------------------------------|-------------------------------------------------------------|------------------------------------------------------------------|
+| Full form                    | Extract, Transform, Load                                    | Extract, Load, Transform                                         |
+| Order of steps               | Transform happens before loading                            | Transform happens after loading                                  |
+| Where transformation happens | Separate ETL engine or staging server                       | Inside the target (cloud warehouse or data lake)                 |
+| Data stored in target        | Only transformed (processed) data                           | Raw data first, transformed data later                           |
+| Purpose of data              | Built for one specific need or domain (e.g., finance)       | Reusable by many domains (analytics, data science, AI/ML)        |
+| Flexibility                  | Low: new needs often require ETL changes and re-extraction  | High: new needs only require a new transformation on raw data    |
+| Raw data availability        | Usually not available in the target                         | Always available for reprocessing                                |
+| Data types supported         | Mostly structured data                                      | Structured, semi-structured and unstructured data               |
+| Data volume                  | Small to medium                                             | Large (big data)                                                 |
+| Scalability                  | Limited by the ETL server                                   | High, uses the cloud platform's compute                          |
+| Environment                  | On-premise, traditional data warehouse                      | Cloud (Snowflake, Databricks, BigQuery, ADLS)                    |
+| Tools                        | Informatica PowerCenter, DataStage, SSIS                    | ADF, dbt, Snowflake, Databricks (SparkSQL)                       |
+| Governance                   | Easier, since only cleaned data is loaded                   | Needs more care (access control, masking), as raw data is exposed|
+| Testing focus                | Source vs. target after transformation                      | Source vs. raw layer, then raw vs. curated layers                |
