@@ -189,3 +189,87 @@ SUM(
 FROM TRANSACTIONS;
 
 
+23) SUBJECT WHERE PARTICULAR STUDENT GOT LESS MARKS  / SUBJECT WHERE ALL STUDENTS GOT LESS MARKS 
+student | maths | physics | chemistry
+--------|-------|---------|----------
+Karthik | 98    | 99      | 70
+Spmnath | 88    | 97      | 100
+Anita   | 92    | 85      | 90
+Rahul   | 75    | 68      | 80
+Priya   | 100   | 95      | 98
+Vikram  | 60    | 72      | 55
+Sneha   | 88    | 88      | 76
+Arjun   | 45    | 52      | 30
+Divya   | 81    | 90      | 90
+Manoj   | 67    | 59      | 73
+
+
+-- PARTICULAR STUDENT
+SELECT student,
+       CASE
+           WHEN maths <= physics AND maths <= chemistry THEN 'Maths'
+           WHEN physics <= chemistry THEN 'Physics'
+           ELSE 'Chemistry'
+       END AS lowest_subject,
+       LEAST(maths, physics, chemistry) AS lowest_mark
+FROM students
+WHERE student = 'Rahul';
+
+--> ALL STUDENT
+
+SELECT student,
+       CASE
+           WHEN maths <= physics AND maths <= chemistry THEN 'Maths'
+           WHEN physics <= chemistry THEN 'Physics'
+           ELSE 'Chemistry'
+       END AS lowest_subject,
+       LEAST(maths, physics, chemistry) AS lowest_mark
+FROM students;
+
+
+--> HOW MANY STUDENTS ARE WEAKEST IN EACH SUBJECT 
+
+SELECT lowest_subject, COUNT(*) AS student_count
+FROM (
+    SELECT CASE
+               WHEN maths <= physics AND maths <= chemistry THEN 'Maths'
+               WHEN physics <= chemistry THEN 'Physics'
+               ELSE 'Chemistry'
+           END AS lowest_subject
+    FROM students
+) t
+GROUP BY lowest_subject;
+
+
+24) 
+STD_ID | TERM1 | TERM2 | TERM3
+-------|-------|-------|------
+101    | 1200  | 1300  | 1400
+102    | 1400  | 1500  | 1700
+103    | 1700  | 1800  | 1900
+
+
+--O/P
+
+STD_ID | TERM
+-------|-----
+101    | 1200
+102    | 1400
+103    | 1700
+101    | 1300
+102    | 1500
+103    | 1800
+101    | 1400
+102    | 1700
+103    | 1900
+
+SELECT std_id, term1 AS term FROM student_terms
+UNION ALL
+SELECT std_id, term2 FROM student_terms
+UNION ALL
+SELECT std_id, term3 FROM student_terms;
+
+
+
+
+
