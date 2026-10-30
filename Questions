@@ -11,12 +11,21 @@ Why we are storing the data in s3
 --> Upstream Testing
 --> Data Retention Policy ( Till 6 months ) 
 --> After 6 months data will be moved to 
+
 ** Storage Classes of AWS S3
 Typical lifecycle for raw data
 Day 0-30: S3 Standard (just landed, being processed and validated)
 After 30 days: Standard-IA (occasional reprocessing)
 After 90 days: Glacier Flexible Retrieval
 After 180+ days: Deep Archive, optionally with an expiry rule after the retention period ends
+
+Storage Classes of ADLS Gen 2
+Tier			Best for													Min. duration		Access						Storage cost		Access cost
+------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Hot			Frequently accessed data (active processing, analytics)			None				Instant						Highest				Lowest
+Cool		Infrequently accessed data (short-term backups, older data)		30 days				Instant						Lower				Higher
+Cold		Rarely accessed data that still needs instant reads				90 days				Instant						Lower than Cool		Higher than Cool
+Archive		Long-term retention, compliance, raw history					180 days			Offline, needs rehydration	Lowest				Highest
 
 Then S3 contains all type of data and from s3 only the data present in accurate format , Naming Conventions will move to RAW folder
 
