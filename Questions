@@ -95,10 +95,47 @@ Differnce between ETL and ELT
 | Purpose of data              | Built for one specific need or domain (e.g., finance)       | Reusable by many domains (analytics, data science, AI/ML)        |
 | Flexibility                  | Low: new needs often require ETL changes and re-extraction  | High: new needs only require a new transformation on raw data    |
 | Raw data availability        | Usually not available in the target                         | Always available for reprocessing                                |
-| Data types supported         | Mostly structured data                                      | Structured, semi-structured and unstructured data               |
+| Data types supported         | Mostly structured data                                      | Structured, semi-structured and unstructured data                |
 | Data volume                  | Small to medium                                             | Large (big data)                                                 |
 | Scalability                  | Limited by the ETL server                                   | High, uses the cloud platform's compute                          |
 | Environment                  | On-premise, traditional data warehouse                      | Cloud (Snowflake, Databricks, BigQuery, ADLS)                    |
 | Tools                        | Informatica PowerCenter, DataStage, SSIS                    | ADF, dbt, Snowflake, Databricks (SparkSQL)                       |
 | Governance                   | Easier, since only cleaned data is loaded                   | Needs more care (access control, masking), as raw data is exposed|
 | Testing focus                | Source vs. target after transformation                      | Source vs. raw layer, then raw vs. curated layers                |
+
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Validations done at each part
+s3 to bronze
+--> Verify Root folder structure 
+--> verify that file is moved from s3 to adls bronze
+--> Verify s3 to row pipeline execution 
+--> Verify file is not empty in bronze layer
+--> Verify column counts in bronze
+--> Verify record counts between bronze and s3
+--> Verify Duplicate records between s3 and bronze
+
+RAW to CLEANSED
+--> Verify raw to cleansed pipeline execution
+--> Verify source raw file is oved to archive
+--> Verify column count between raw to cleansed
+--> verify record count between raw to cleansed
+--> verify removal of white space 
+--> Verify the decoding
+--> Verify Phone number updation
+--> Verify for duplicates
+--> Product file contains only the products whose price greater than one null check
+
+
+Silver to gold
+--> Validate the pipeline
+--> validate the business need
+--> validate total revenue calculation
+--> verify total number of orders
+--> verify total qty sold
+--> verify most valuable order
+--> Verify product wise total revenue calculation
+--> verify the total units sold by product wise
+--> verify product wise average selling price 
+--> verify category wise total revenue
