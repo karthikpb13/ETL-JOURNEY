@@ -414,8 +414,77 @@ ORDER BY NUM DESC, ID ASC
 LIMIT 1;
 
 
+35) FIRST LETTER CAPITAL 
+SELECT USER_ID,
+       UPPER(SUBSTR(NAME, 1, 1)) || LOWER(SUBSTR(NAME, 2)) AS NAME
+FROM USERS
+ORDER BY USER_ID;
+
+36) SECOND HIGHEST SALARY
+SELECT COALESCE(MAX(SALARY),null) AS SecondHighestSalary 
+FROM EMPLOYEE
+WHERE SALARY < (SELECT MAX(SALARY) FROM EMPLOYEE)
 
 
+36) GROUP SOLD BY THE DATE
+Activities table:
++------------+------------+
+| sell_date  | product     |
++------------+------------+
+| 2020-05-30 | Headphone  |
+| 2020-06-01 | Pencil     |
+| 2020-06-02 | Mask       |
+| 2020-05-30 | Basketball |
+| 2020-06-01 | Bible      |
+| 2020-06-02 | Mask       |
+| 2020-05-30 | T-Shirt    |
++------------+------------+
+Output: 
++------------+----------+------------------------------+
+| sell_date  | num_sold | products                     |
++------------+----------+------------------------------+
+| 2020-05-30 | 3        | Basketball,Headphone,T-shirt |
+| 2020-06-01 | 2        | Bible,Pencil                 |
+| 2020-06-02 | 1        | Mask                         |
++------------+----------+------------------------------+
+
+SELECT 
+    sell_date,
+    COUNT(DISTINCT product) AS num_sold,
+    GROUP_CONCAT(DISTINCT product ORDER BY product ASC) AS products
+FROM Activities
+GROUP BY sell_date
+ORDER BY sell_date;
+
+ORACLE
+SELECT
+    SELL_DATE,
+    COUNT(DISTINCT PRODUCT) AS NUM_SOLD,
+    LISTAGG(PRODUCT, ',') WITHIN GROUP (ORDER BY PRODUCT) AS PRODUCTS
+FROM (
+    SELECT DISTINCT SELL_DATE, PRODUCT
+    FROM ACTIVITIES
+)
+GROUP BY SELL_DATE
+ORDER BY SELL_DATE;
+
+
+37) PRODUCTS SOLD IN FEBRURAY 2020
+SELECT P.PRODUCT_NAME, SUM(O.UNIT) AS UNIT
+FROM PRODUCTS P JOIN ORDERS O 
+ON P.PRODUCT_ID = O.PRODUCT_ID
+WHERE O.ORDER_DATE BETWEEN '2020-02-01' AND '2020-02-29'
+GROUP BY P.PRODUCT_NAME
+HAVING SUM(O.UNIT) >= 100; 
+
+38) USERS WITH VALID EMAILS
+SELECT user_id, name, mail
+FROM Users
+WHERE REGEXP_LIKE(
+    mail,
+    '^[A-Za-z][A-Za-z0-9._-]*@leetcode\.com$',
+    'c'
+);
 
 
 
