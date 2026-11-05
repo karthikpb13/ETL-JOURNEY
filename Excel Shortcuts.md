@@ -1,0 +1,40 @@
+Shortcut
+1) Select all headings then press ALT+D+o -- For Data Entry 
+2) 
+
+Basic Formulas
+Sum= alt =
+Average = alt H U A 
+Max = Alt H U M
+Min Alt H U I
+
+count :- number count
+Counta :- Everything except blank
+CountBlank :- Count only blank 
+
+
+Upper :- =UPPER
+Lower:-  =LOWER
+Proper:- =Proper
+
+substring functions
+left:-  left(cell_no, character)
+Right:- right(cell_no, character)
+Mid:-   mid(cell_no,start_char,end_char)
+
+text Functions Date functions 
+to find out day from date :- =TEXT(CELL_NO,"DDDD")
+To find the month from data :- =TEXT(CELL_NO,"MMMM")
+To find the date that is ADD_MONTHS:- =EDATE(CELL_NO,MONTHS)
+
+
+Logical Formulas 
+
+IF
+=IF(CELL_NO>=33%,"PASS","FAIL")
+
+SUMIF, AVERAGEIF,COUNTIF
+
+
+VLOOKUP 
+XLOOKUP
