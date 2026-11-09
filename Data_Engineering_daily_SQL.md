@@ -40,7 +40,6 @@ ON P.PERSPONID=A.PERSONID
 ## 2. Employees Earning More Than Their Managers
 
 **Question**
-7
 Write an SQL query to find the employees who earn more than their
 managers.
 Rules:                                                               
@@ -62,11 +61,11 @@ id       name               salary               managerId
 
 ```sql
 
-
-
-
-
-
+SELECT E.NAME AS EMP_NAME, E.SALARY AS EMP_SAL
+       M.NAME AS MGR_NAME, M.SALARY AS MGR_SAL
+FROM EMPLOYEE E JOIN EMPLOYEE M
+ON E.MANAGERID=M.ID
+WHERE E.SALARY> M.SALARY;
 
 ```
 
@@ -94,12 +93,10 @@ id                   email
 
 ```sql
 
-
-
-
-
-
-
+SELECT EMAIL,COUNT(EMAIL)
+FROM PERSON
+GROUP BY EMAIL
+HAVING COUNT(EMAIL)>1;
 ```
 
 ---
@@ -107,23 +104,22 @@ id                   email
 ## 4. Customers Who Never Order
 
 **Question**
-10
 Write an SQL query to report all customers who never order
 anything.
-Rules:                                                       12
+Rules:                                                       
 • Return the result table in any order.
 
 **Source table(s)**
 
 ```text
-TABLE: CUSTOMERS                                             1
-id                        name                               2
+TABLE: CUSTOMERS                                             
+id                        name                               
 1                         Joe
 2                         Henry
-3                         Sam                                4
+3                         Sam                                
 4                         Max
-TABLE: ORDERS                                                6
-id               customerId                                  7
+TABLE: ORDERS                                               
+id               customerId                                  
 1                3
 2                1
 ```
@@ -131,13 +127,15 @@ id               customerId                                  7
 **Your SQL answer**
 
 ```sql
+SELECT ID, NAME 
+FROM CUSTOMERS
+WHERE ID NOT IN (SELECT DISTINCT ID FROM ORDERS);
 
 
-
-
-
-
-
+SELECT C.ID, C.NAME
+FROM CUSTOMERS C LEFT JOIN ORDERS O
+ON C.ID=O.ID
+WHERE O.ID IS NULL;
 ```
 
 ---
@@ -146,30 +144,27 @@ id               customerId                                  7
 
 **Question**
 A country is big if it has an area of at least 3 million km2, or a
-population of at least 25 million. Write an SQL query to report the    7
+population of at least 25 million. Write an SQL query to report the    
 name, population, and area of the big countries.
 Rules:
-• Return the result table in any order.                               9
+• Return the result table in any order.                               
 
 **Source table(s)**
 
 ```text
-TABLE: WORLD                                                          1
-name             continent      area      population    gdp           2
+TABLE: WORLD                                                         
+name             continent      area      population    gdp           
 Afghanistan      Asia           652230    25500100      20343000
 Albania          Europe         28748     2831741       12960000
-Algeria          Africa         2381741   37100000      188681000     4
+Algeria          Africa         2381741   37100000      188681000     
 ```
 
 **Your SQL answer**
 
 ```sql
-
-
-
-
-
-
+SELECT NAME, POPULATION, AREA
+FROM WORLD
+WHERE AREA>=3000000 OR POPULATION > = 25000000;
 
 ```
 
@@ -179,38 +174,38 @@ Algeria          Africa         2381741   37100000      188681000     4
 
 **Question**
 Write an SQL query to find employees who have the highest salary
-in each of the departments.                                            12
-Rules:                                                                 13
-• If multiple employees have the same highest salary, return all of
-them.                                                               14
+in each of the departments.                                            
+Rules:                                                                 
+• If multiple employees have the same highest salary, return all of them.                                                               
 • Do not use LIMIT.
 
 **Source table(s)**
 
 ```text
-TABLE: EMPLOYEE                                                        1
-id      name           salary            departmentId                  2
+TABLE: EMPLOYEE                                                        
+id      name           salary            departmentId                  
 1       Joe            70000             1
 2       Jim            90000             1
-3       Henry          80000             2                             4
+3       Henry          80000             2                             
 4       Sam            60000             2
 5       Max            90000             1
-TABLE: DEPARTMENT                                                      7
+TABLE: DEPARTMENT                                                      
 id                       name
 1                        IT
-2                        Sales                                         9
+2                        Sales                                         
 ```
 
 **Your SQL answer**
 
 ```sql
-
-
-
-
-
-
-
+SELECT ID, NAME, SALARY, DEPARTMENTID
+FROM
+(
+    SELECT ID, NAME, SALARY, DEPARTMENTID, 
+        DENSE_RANK()OVER(PARTITION BY DEPARTMENTID ORDER BY SALARY DESC) AS RNK
+    FROM EMPLOYEE
+)
+WHERE RNK =1 ;
 ```
 
 ---
@@ -219,30 +214,39 @@ id                       name
 
 **Question**
 Write an SQL query to report the second highest salary from the
-Employee table.                                                           7
+Employee table.                                                           
 Rules:
 • If there is no second highest salary, the query should report null.
 
 **Source table(s)**
 
 ```text
-TABLE: EMPLOYEE                                                          1
-id                     salary                                            2
+TABLE: EMPLOYEE                                                          
+id                     salary                                            
 1                      100
 2                      200
-3                      300                                               4
+3                      300                                               
 ```
 
 **Your SQL answer**
 
 ```sql
+SELECT MAX(SALARY)
+FROM EMPLOYEE
+WHERE SALARY<(SELECT MAX(SALARY) FROM EMPLOYEE);
 
+SELECT ID,SALARY
+FROM EMPLOYEE
+ORDER BY SALARY  DESC
+LIMIT 1 OFFSET 2;
 
-
-
-
-
-
+SELECT ID, SALARY
+FROM 
+(
+SELECT ID, SALARY, DENSE_RANK()OVER (ORDER BY SALARY DESC) RN
+FROM EMPLOYEE
+)
+WHERE RN = 2;
 ```
 
 ---
@@ -251,19 +255,19 @@ id                     salary                                            2
 
 **Question**
 Write an SQL query to report the nth highest salary from the
-Employee table.                                                        7
+Employee table.                                                        
 Rules:
 • If there is no nth highest salary, the query should report null.
-• N is passed as a parameter to the function/procedure.               9
+• N is passed as a parameter to the function/procedure.               
 
 **Source table(s)**
 
 ```text
-TABLE: EMPLOYEE                                                       1
-id                      salary                                        2
+TABLE: EMPLOYEE                                                       
+id                      salary                                        
 1                       100
 2                       200
-3                       300                                           4
+3                       300                                           
 ```
 
 **Your SQL answer**
@@ -284,36 +288,33 @@ id                      salary                                        2
 
 **Question**
 Write an SQL query to rank the scores. The ranking should be
-calculated according to the following rules:                              9
-Rules:                                                                   10
+calculated according to the following rules:                              
+Rules:                                                                   
 • The scores should be ranked from the highest to the lowest.
-• If there is a tie between two scores, both should have the same       11
+• If there is a tie between two scores, both should have the same       
 ranking.
-• After a tie, the next ranking number should be the next consecutive   12
+• After a tie, the next ranking number should be the next consecutive   
 integer value.
 
 **Source table(s)**
 
 ```text
-TABLE: SCORES                                                            1
-id                         score                                         2
+TABLE: SCORES                                                            
+id                         score                                         
 1                          3.5
 2                          3.65
-3                          4.0                                           4
+3                          4.0                                           
 4                          3.85
 5                          4.0
-6                          3.65                                          6
+6                          3.65                                          
 ```
 
 **Your SQL answer**
 
 ```sql
 
-
-
-
-
-
+select dense_rank() over(order by score desc) as rnk, s.*
+from scores;
 
 ```
 
@@ -323,22 +324,22 @@ id                         score                                         2
 
 **Question**
 Write an SQL query to report all the classes that have at least five
-students.                                                              11
-Rules:                                                                 12
+students.                                                              
+Rules:                                                                 
 • Return the result table in any order.
 
 **Source table(s)**
 
 ```text
-TABLE: COURSES                                                         1
-student                            class                               2
+TABLE: COURSES                                                         
+student                            class                               
 A                                  Math
 B                                  English
-C                                  Math                                4
+C                                  Math                                
 D                                  Biology
 E                                  Math
-F                                  Computer                            6
-G                                  Math                                7
+F                                  Computer                            
+G                                  Math                                
 H                                  Math
 I                                  Math
 ```
@@ -347,11 +348,10 @@ I                                  Math
 
 ```sql
 
-
-
-
-
-
+SELECT CLASS, COUNT(STUDENT)
+FROM COURSES
+GROUP BY CLASS
+HAVING COUNT(STUDENT) >= 5;
 
 ```
 
@@ -363,9 +363,9 @@ I                                  Math
 7
 Write an SQL query to find the customer_number for the customer
 who has placed the largest number of orders.
-Rules:                                                                 9
+Rules:                                                                 
 • It is guaranteed that exactly one customer will have placed more
-orders than any other customer.                                    10
+orders than any other customer.                                    
 
 **Source table(s)**
 
@@ -374,7 +374,7 @@ Orders
 TABLE: ORDERS
 order_number                     customer_number
 1                                1
-2                                2                                     4
+2                                2                                     
 3                                3
 4                                3
 ```
@@ -383,11 +383,11 @@ order_number                     customer_number
 
 ```sql
 
-
-
-
-
-
+SELECT customer_number
+FROM Orders
+GROUP BY customer_number
+ORDER BY COUNT(*) DESC
+LIMIT 1;
 
 ```
 
@@ -396,43 +396,44 @@ order_number                     customer_number
 ## 12. Department Top Three Salaries
 
 **Question**
-12
-A company's executives are interested in seeing who earns the most    13
+A company's executives are interested in seeing who earns the most    
 money in each of the company's departments. A high earner in a
-department is an employee who has a salary in the top three unique    14
-salaries for that department.                                         15
+department is an employee who has a salary in the top three unique    
+salaries for that department.                                         
 Rules:
-• Write an SQL query to find the employees who are high earners in   16
+• Write an SQL query to find the employees who are high earners in   
 each of the departments.
 
 **Source table(s)**
 
 ```text
-TABLE: EMPLOYEE                                                       1
-id      name           salary            departmentId                  2
+TABLE: EMPLOYEE                                                       
+id      name           salary            departmentId                  
 1       Joe            85000             1
 2       Henry          80000             2
-3       Sam            60000             2                             4
+3       Sam            60000             2                             
 4       Max            90000             1
 5       Janet          69000             1
-6       Randy          85000             1                             6
-7       Will           70000             1                             7
-TABLE: DEPARTMENT                                                     8
-id                       name                                          9
-1                        IT                                           10
+6       Randy          85000             1                             
+7       Will           70000             1                             
+TABLE: DEPARTMENT                                                     
+id                       name                                          
+1                        IT                                           
 2                        Sales
 ```
 
 **Your SQL answer**
 
 ```sql
-
-
-
-
-
-
-
+SELECT RNK,DNAME,EMP_ID,EMP_NAME,SALARY
+FROM 
+(
+SELECT D.NAME AS DNAME, E.ID AS EMP_ID, E.NAME AS EMP_NAME, E.SALARY
+       DENSE_RANK() OVER (PARTTION BY D.NAME ORDER BY SALARY DESC) AS RNK
+FROM EMPLOYEE E JOIN DEPARTMENT D
+ON D.ID= E.DEPARTMENTID
+)
+WHERE RNK <=3;
 ```
 
 ---
@@ -440,19 +441,18 @@ id                       name                                          9
 ## 13. Game Play Analysis I
 
 **Question**
-7
 Write an SQL query to report the first login date for each player.
 Rules:
-• Return the result table in any order.                              9
+• Return the result table in any order.                              
 
 **Source table(s)**
 
 ```text
-TABLE: ACTIVITY                                                      1
-player_id        device_id        event_date      games_played       2
+TABLE: ACTIVITY                                                      
+player_id        device_id        event_date      games_played       
 1                2                2016-03-01      5
 1                2                2016-05-02      6
-2                3                2017-06-25      1                  4
+2                3                2017-06-25      1                  
 3                1                2016-03-02      0
 3                4                2018-07-03      5
 ```
@@ -461,11 +461,9 @@ player_id        device_id        event_date      games_played       2
 
 ```sql
 
-
-
-
-
-
+SELECT PLAYER_ID, MIN(EVENT_DATE) AS FIRST_LOGIN
+FROM ACTIVITY
+GROUP BY PLAYER_ID;
 
 ```
 
@@ -474,20 +472,19 @@ player_id        device_id        event_date      games_played       2
 ## 14. Game Play Analysis II
 
 **Question**
-7
 Write an SQL query to report the device that is first logged in for
 each player.
-Rules:                                                                 9
+Rules:                                                                 
 • Return the result table in any order.
 
 **Source table(s)**
 
 ```text
-TABLE: ACTIVITY                                                       1
-player_id        device_id        event_date        games_played      2
+TABLE: ACTIVITY                                                       
+player_id        device_id        event_date        games_played      
 1                2                2016-03-01        5
 1                2                2016-05-02        6
-2                3                2017-06-25        1                 4
+2                3                2017-06-25        1                 
 3                1                2016-03-02        0
 3                4                2018-07-03        5
 ```
@@ -496,11 +493,26 @@ player_id        device_id        event_date        games_played      2
 
 ```sql
 
+SELECT A1.PLAYER_ID, A1.DEVICE_ID
+FROM ACTIVITY A1
+WHERE A1.EVENT_DATE =(SELECT MIN(A2.EVENT_DATE)
+                    FROM ACTIVITY A2
+                    WHERE A1.PLAYER_ID=A2.PLAYER_ID);
 
 
-
-
-
+SELECT
+    A.PLAYER_ID,
+    A.DEVICE_ID
+FROM ACTIVITY A
+JOIN (
+    SELECT
+        PLAYER_ID,
+        MIN(EVENT_DATE) AS FIRST_DATE
+    FROM ACTIVITY
+    GROUP BY PLAYER_ID
+) F
+ON A.PLAYER_ID = F.PLAYER_ID
+AND A.EVENT_DATE = F.FIRST_DATE;
 
 ```
 
