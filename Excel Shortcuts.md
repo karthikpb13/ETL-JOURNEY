@@ -1,40 +1,91 @@
-Shortcut
-1) Select all headings then press ALT+D+o -- For Data Entry 
-2) 
 
-Basic Formulas
-Sum= alt =
-Average = alt H U A 
-Max = Alt H U M
-Min Alt H U I
+# Excel Shortcuts and Formulas
 
-count :- number count
-Counta :- Everything except blank
-CountBlank :- Count only blank 
+## 1. Shortcuts
 
+| Shortcut | Purpose |
+|---|---|
+| `ALT + D + O` | Data Entry |
 
-Upper :- =UPPER
-Lower:-  =LOWER
-Proper:- =Proper
+## 2. Basic Formulas
 
-substring functions
-left:-  left(cell_no, character)
-Right:- right(cell_no, character)
-Mid:-   mid(cell_no,start_char,end_char)
+| Formula | Shortcut / Syntax |
+|---|---|
+| SUM | `ALT + =` |
+| AVERAGE | `ALT + H + U + A` |
+| MAX | `ALT + H + U + M` |
+| MIN | `ALT + H + U + I` |
 
-text Functions Date functions 
-to find out day from date :- =TEXT(CELL_NO,"DDDD")
-To find the month from data :- =TEXT(CELL_NO,"MMMM")
-To find the date that is ADD_MONTHS:- =EDATE(CELL_NO,MONTHS)
+### Counting Functions
 
+| Function | Purpose |
+|---|---|
+| `COUNT()` | Counts cells containing numbers |
+| `COUNTA()` | Counts non-empty cells |
+| `COUNTBLANK()` | Counts blank cells |
 
-Logical Formulas 
+## 3. Text Case Functions
 
-IF
-=IF(CELL_NO>=33%,"PASS","FAIL")
+| Function | Purpose | Example |
+|---|---|---|
+| UPPER | Converts text to uppercase | `=UPPER(A1)` |
+| LOWER | Converts text to lowercase | `=LOWER(A1)` |
+| PROPER | Capitalizes the first letter of each word | `=PROPER(A1)` |
 
-SUMIF, AVERAGEIF,COUNTIF
+## 4. Substring Functions
 
+| Function | Purpose | Syntax |
+|---|---|---|
+| LEFT | Extracts characters from the left | `=LEFT(A1,3)` |
+| RIGHT | Extracts characters from the right | `=RIGHT(A1,3)` |
+| MID | Extracts characters from a specified position | `=MID(A1,2,4)` |
 
-VLOOKUP 
-XLOOKUP
+## 5. Text and Date Functions
+
+### Extract Day from Date
+
+```excel
+=TEXT(A1,"DDDD")
+```
+
+Returns the full day name.
+
+### Extract Month from Date
+
+```excel
+=TEXT(A1,"MMMM")
+```
+
+Returns the full month name.
+
+### Add Months to a Date
+
+```excel
+=EDATE(A1,3)
+```
+
+Returns the date after adding 3 months.
+
+## 6. Logical Formulas
+
+### IF Function
+
+```excel
+=IF(A1>=33%,"PASS","FAIL")
+```
+
+- If the value is greater than or equal to 33%, returns `PASS`.
+- Otherwise, returns `FAIL`.
+
+### Conditional Functions
+
+| Function | Purpose |
+|---|---|
+| `SUMIF()` | Adds values based on a condition |
+| `AVERAGEIF()` | Calculates average based on a condition |
+| `COUNTIF()` | Counts cells based on a condition |
+
+## 7. Lookup Functions
+
+- `VLOOKUP()`
+- `XLOOKUP()`
