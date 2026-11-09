@@ -521,23 +521,22 @@ AND A.EVENT_DATE = F.FIRST_DATE;
 ## 15. Product Sales Analysis I
 
 **Question**
-10
 Write an SQL query that reports the product_name, year, and price
 for each sale_id in the Sales table.
-Rules:                                                                  12
+Rules:                                                                  
 • Return the resulting table in any order.
 
 **Source table(s)**
 
 ```text
-TABLE: SALES                                                            1
-sale_id        product_id           year        quantity       price    2
+TABLE: SALES                                                            
+sale_id        product_id           year        quantity       price    
 1              100                  2008        10             5000
 2              100                  2009        12             5000
-7              200                  2011        15             9000     4
+7              200                  2011        15             9000     
 TABLE: PRODUCT
 product_id                        product_name
-100                               Nokia                                 7
+100                               Nokia                                 
 200                               Apple
 300                               Samsung
 ```
@@ -545,12 +544,9 @@ product_id                        product_name
 **Your SQL answer**
 
 ```sql
-
-
-
-
-
-
+SELECT P.PRODUCT_NAME, S.YEAR, S.PRICE
+FROM PRODUCT P JOIN SALES S
+ON P.PRODUCT_ID=S.PRODUCT_ID;
 
 ```
 
@@ -559,23 +555,22 @@ product_id                        product_name
 ## 16. Product Sales Analysis II
 
 **Question**
-10
 Write an SQL query that reports the total quantity sold for every
 product id.
-Rules:                                                              12
+Rules:                                                              
 • Return the resulting table in any order.
 
 **Source table(s)**
 
 ```text
-TABLE: SALES                                                        1
-sale_id        product_id            year    quantity      price    2
+TABLE: SALES                                                        
+sale_id        product_id            year    quantity      price    
 1              100                   2008    10            5000
 2              100                   2009    12            5000
-7              200                   2011    15            9000     4
+7              200                   2011    15            9000     
 TABLE: PRODUCT
 product_id                        product_name
-100                               Nokia                             7
+100                               Nokia                             
 200                               Apple
 300                               Samsung
 ```
@@ -583,13 +578,10 @@ product_id                        product_name
 **Your SQL answer**
 
 ```sql
-
-
-
-
-
-
-
+SELECT P.PRODUCT_ID, P.PRODUCT_NAME, SUM(S.QUANTITY) AS TOT_QTY
+FROM PRODUCT P JOIN SALES S
+ON P.PRODUCT_ID=S.PRODUCT_ID
+GROUP BY P.PRODUCT_ID, P.PRODUCT_NAME;
 ```
 
 ---
@@ -598,34 +590,42 @@ product_id                        product_name
 
 **Question**
 Write an SQL query that reports the best seller by total sales price.
-Rules:                                                                    12
-• If there is a tie, report them all.                                    13
+Rules:                                                                    
+• If there is a tie, report them all.                                    
 
 **Source table(s)**
 
 ```text
-TABLE: PRODUCT                                                            1
-product_id               product_name               unit_price            2
+TABLE: PRODUCT                                                            
+product_id               product_name               unit_price            
 1                        S8                         1000
 2                        G4                         800
-3                        iPhone                     1400                  4
+3                        iPhone                     1400                  
 TABLE: SALES
-seller_id product_id buyer_id insert_date quantity price
-1              1               1          2019-01-21       2      2000    7
+seller_id  product_id      buyer_id      insert_date   quantity   price
+1              1               1          2019-01-21       2      2000    
 1              2               2          2019-02-17       1      800
 2              2               3          2019-06-02       1      800
-3              3               4          2019-05-13       2      2800    9
+3              3               4          2019-05-13       2      2800    
 ```
 
 **Your SQL answer**
 
 ```sql
 
-
-
-
-
-
+WITH SELLER_TOTALS AS (
+    SELECT
+        SELLER_ID,
+        SUM(PRICE) AS TOTAL_SALES
+    FROM SALES
+    GROUP BY SELLER_ID
+)
+SELECT SELLER_ID
+FROM SELLER_TOTALS
+WHERE TOTAL_SALES = (
+    SELECT MAX(TOTAL_SALES)
+    FROM SELLER_TOTALS
+);
 
 ```
 
@@ -637,17 +637,17 @@ seller_id product_id buyer_id insert_date quantity price
 7
 Write an SQL query to report the movies with an odd-numbered ID
 and a description that is not "boring".
-Rules:                                                               9
+Rules:                                                              
 • Return the result table ordered by rating in descending order.
 
 **Source table(s)**
 
 ```text
-TABLE: CINEMA                                                       1
-id     movie                   description               rating     2
+TABLE: CINEMA                                                       
+id     movie                   description               rating     
 1      War                     great 3D                  8.9
 2      Science                 fiction                   8.5
-3      irish                   boring                    6.2        4
+3      irish                   boring                    6.2        
 4      Ice song                Fantacy                   8.6
 5      House card              Interesting               9.1
 ```
@@ -656,12 +656,10 @@ id     movie                   description               rating     2
 
 ```sql
 
-
-
-
-
-
-
+SELECT MOVIE
+FROM CINEMA
+WHERE MOD(ID,2)=1 AND DESCRIPTION<>'boring'
+ORDER BY RATING DESC;
 ```
 
 ---
@@ -669,36 +667,70 @@ id     movie                   description               rating     2
 ## 19. Total Sales Amount by Year
 
 **Question**
-10
 Write an SQL query to report the total sales amount of each item for
 each year, with corresponding product_name, report_year, and
-total_amount.                                                                12
-Rules:                                                                       13
+total_amount.                                                                
+Rules:                                                                       
 • Return the result table ordered by product_id and report_year.
-• Dates are within 2018 to 2020.                                            14
+• Dates are within 2018 to 2020.                                            
 
 **Source table(s)**
 
 ```text
-TABLE: PRODUCT                                                               1
-product_id                        product_name                               2
+TABLE: PRODUCT                                                               
+product_id                        product_name                               
 1                                 LC Phone
 2                                 LC T-Shirt
-3                                 LC Keychain                                4
+3                                 LC Keychain                                
 TABLE: SALES
-product_id period_start period_end average_daily_sales
-1              2019-01-25       2019-02-28 100                               7
-2              2018-12-01       2020-01-01 10
-3              2019-12-01       2020-01-31 1
+product_id    period_start      period_end    average_daily_sales
+1              2019-01-25       2019-02-28      100                               
+2              2018-12-01       2020-01-01      10
+3              2019-12-01       2020-01-31      1
 ```
 
 **Your SQL answer**
 
 ```sql
 
-
-
-
+WITH YEARS AS (
+    SELECT 2018 + LEVEL - 1 AS REPORT_YEAR
+    FROM DUAL
+    CONNECT BY LEVEL <= 3
+),
+YEARLY_SALES AS (
+    SELECT
+        S.PRODUCT_ID,
+        Y.REPORT_YEAR,
+        S.AVERAGE_DAILY_SALES,
+        GREATEST(
+            S.PERIOD_START,
+            TO_DATE(Y.REPORT_YEAR || '-01-01', 'YYYY-MM-DD')
+        ) AS START_DATE,
+        LEAST(
+            S.PERIOD_END,
+            ADD_MONTHS(
+                TO_DATE(Y.REPORT_YEAR || '-01-01', 'YYYY-MM-DD'),
+                12
+            ) - 1
+        ) AS END_DATE
+    FROM SALES S
+    CROSS JOIN YEARS Y
+    WHERE EXTRACT(YEAR FROM S.PERIOD_START) <= Y.REPORT_YEAR
+      AND EXTRACT(YEAR FROM S.PERIOD_END) >= Y.REPORT_YEAR
+)
+SELECT
+    P.PRODUCT_ID,
+    P.PRODUCT_NAME,
+    Y.REPORT_YEAR,
+    (Y.END_DATE - Y.START_DATE + 1)
+        * Y.AVERAGE_DAILY_SALES AS TOTAL_AMOUNT
+FROM YEARLY_SALES Y
+JOIN PRODUCT P
+    ON P.PRODUCT_ID = Y.PRODUCT_ID
+ORDER BY
+    P.PRODUCT_ID,
+    Y.REPORT_YEAR;
 
 
 
@@ -709,34 +741,41 @@ product_id period_start period_end average_daily_sales
 ## 20. Average Selling Price
 
 **Question**
-Write an SQL query to find the average selling price for each          12
-product.                                                               13
+Write an SQL query to find the average selling price for each          
+product.                                                               
 Rules:
-• average_price should be rounded to 2 decimal places.                14
+• average_price should be rounded to 2 decimal places.                
 • Return the result table in any order.
 
 **Source table(s)**
 
 ```text
-TABLE: PRICES                                                          1
-product_id          start_date         end_date                price    2
+TABLE: PRICES                                                          
+product_id          start_date         end_date                price    
 1                   2019-02-17         2019-02-28              5
 1                   2019-03-01         2019-03-22              20
-2                   2019-02-01         2019-02-20              15       4
+2                   2019-02-01         2019-02-20              15       
 2                   2019-02-21         2019-03-31              30
-TABLE: UNITSSOLD                                                       6
-product_id               purchase_date                    units         7
+TABLE: UNITSSOLD                                                       
+product_id               purchase_date                    units         
 1                        2019-02-25                       100
 1                        2019-03-01                       15
-2                        2019-02-10                       200           9
-2                        2019-03-22                       30           10
+2                        2019-02-10                       200           
+2                        2019-03-22                       30           
 ```
 
 **Your SQL answer**
 
 ```sql
 
-
+SELECT
+    P.PRODUCT_ID,
+    ROUND(SUM(U.UNITS * P.PRICE) / SUM(U.UNITS), 2) AS AVERAGE_PRICE
+FROM PRICES P
+JOIN UNITSSOLD U
+    ON P.PRODUCT_ID = U.PRODUCT_ID
+WHERE U.PURCHASE_DATE BETWEEN P.START_DATE AND P.END_DATE
+GROUP BY P.PRODUCT_ID;
 
 
 
