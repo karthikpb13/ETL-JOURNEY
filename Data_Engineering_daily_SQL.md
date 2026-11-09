@@ -8,35 +8,31 @@ Each exercise is arranged as: question → source table(s) → space for your SQ
 
 **Question**
 Write a SQL query to report the first name, last name, city, and state
-of each person in the Person table.                                       10
+of each person in the Person table.                                       
 Rules:
 • If the address of a personId is not present in the Address table,
-report null instead.                                                   12
+report null instead.                                                   
 • Return the result table in any order.
 
 **Source table(s)**
 
 ```text
-TABLE: PERSON                                                             1
-personId                 lastName               firstName                 2
+TABLE: PERSON                                                            
+personId                 lastName               firstName                 
 1                        Wang                   Allen
 2                        Alice                  Bob
 TABLE: ADDRESS
 addressId        personId        city                   state
 1                2               New York City          New York
-2                3               Leetcode               California        7
+2                3               Leetcode               California        
 ```
 
 **Your SQL answer**
 
 ```sql
-
-
-
-
-
-
-
+SELECT P.FIRSTANAME, P.LASTNAME, A.CITY, A.STATE
+FROM PERSON P LEFT JOIN ADDRESS A
+ON P.PERSPONID=A.PERSONID
 ```
 
 ---
@@ -47,9 +43,9 @@ addressId        personId        city                   state
 7
 Write an SQL query to find the employees who earn more than their
 managers.
-Rules:                                                               9
+Rules:                                                               
 • managerId is the id of the employee's manager.
-• Return the result table in any order.                            10
+• Return the result table in any order.                            
 
 **Source table(s)**
 
@@ -57,7 +53,7 @@ Rules:                                                               9
 TABLE: EMPLOYEE
 id       name               salary               managerId
 1        Joe                70000                3
-2        Henry              80000                4                   4
+2        Henry              80000                4                   
 3        Sam                60000                Null
 4        Max                90000                Null
 ```
@@ -80,18 +76,18 @@ id       name               salary               managerId
 
 **Question**
 Write an SQL query to report all the duplicate emails.
-Rules:                                                          7
+Rules:                                                          
 • Emails will only consist of lowercase letters.
-• Return the result table in any order.                        8
+• Return the result table in any order.                        
 
 **Source table(s)**
 
 ```text
-TABLE: PERSON                                                  1
-id                   email                                     2
+TABLE: PERSON                                                  
+id                   email                                     
 1                    a@b.com
 2                    c@d.com
-3                    a@b.com                                   4
+3                    a@b.com                                   
 ```
 
 **Your SQL answer**
