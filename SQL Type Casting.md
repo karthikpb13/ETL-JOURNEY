@@ -37,3 +37,5 @@
 | `TIME_FORMAT()` | Formats a time value as text<br>`TIME_FORMAT('14:30:00', '%h:%i %p')` |
 | `UNIX_TIMESTAMP()` | Converts a date or datetime to Unix timestamp seconds<br>`UNIX_TIMESTAMP('2024-12-31 10:30:00')` |
 | `FROM_UNIXTIME()` | Converts Unix timestamp seconds to a datetime or formatted text<br>`FROM_UNIXTIME(1735641000)` |
+
+
