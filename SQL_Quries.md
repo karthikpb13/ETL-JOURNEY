@@ -655,3 +655,112 @@ FROM World
 WHERE (area > 3000000 AND population <= 250000000)
    OR (area <= 3000000 AND population > 250000000);
 ```
+
+## 43)    input		output
+##       ------		--------
+         1,2,3		 2
+         4,5,6,7	 3
+         8,9		 1
+
+```sql
+select length(input) - length(replace(input,',','')) as op
+from dual;
+
+```
+
+## 44) Male and Female count
+
+```sql
+SELECT COUNT(CASE WHEN GENDER='M'
+                  THEN 1 END) AS MALE_COUNT,
+       COUNT(CASE WHEN GENDER='F'
+                  THEN 1 END) AS FEMALE_COUNT
+FROM TABLE
+
+```
+
+## 45) Find city names starttiing and ending with o 
+```sql
+
+SELECT CITY 
+FROM TABLE
+WHERE SUBSTR(UPPER(CITY),1,1) ='O' AND 
+      SUBSTR(UPPER(CITY),-1)='O';
+```
+
+## 46) Display names of emp with maximum salary dept wise
+
+```sql
+SELECT A.EMPNAME, A.SAL
+FROM EMP A
+WHERE A.SAL = (
+    SELECT MAX(B.SAL)
+    FROM EMP B
+    WHERE A.DEPTNO = B.DEPTNO
+);
+```
+
+### 47)  Return middle name 
+
+```sql
+
+SELECT SUBSTR(
+    'KARTHIK P BHADANGE',
+    INSTR('KARTHIK P BHADANGE', ' ', 1, 1) + 1,
+    INSTR('KARTHIK P BHADANGE', ' ', 1, 2)
+      - INSTR('KARTHIK P BHADANGE', ' ', 1, 1) - 1
+)
+FROM DUAL;
+
+
+
+**String:** `KARTHIK P BHADANGE`
+
+**Total characters: 18 (including spaces)**
+
+| Character | K | A | R | T | H | I | K | SPACE | P | SPACE | B | H | A | D | A | N | G | E |
+|-----------|---|---|---|---|---|---|---|-------|---|-------|---|---|---|---|---|---|---|---|
+| Position  | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12 | 13 | 14 | 15 | 16 | 17 | 18 |
+
+**Note:** SPACE represents a blank character.
+
+
+Parameter		Calculation	Result
+Start position		  8 + 1		 9
+Length			  10 - 8 - 1	 1
+
+```
+
+### 48) Customers who joined only in months which has only 30 days 
+
+```sql
+SELECT *
+FROM CUSTOMERS
+WHERE EXTRACT(MONTH FROM JOIN_DATE) IN (4, 6, 9, 11);
+```
+
+### 49) Select system timestamp 
+
+```sql
+SELECT SYSTIMESTAMP FROM DUAL;
+```
+### 50) Display each and every record one more time
+
+```sql
+SELECT * FROM TABLE
+UNION ALL
+SELECT * FROM TABLE;
+
+```
+### 51) Student table with internal and external marks if internal marks > 12 and external marks > 35 then student pass else fail
+
+```sql
+SELECT STUDENT_NAME,
+       CASE
+           WHEN INTERNAL_MARKS > 12
+            AND EXTERNAL_MARKS > 35
+           THEN 'PASS'
+           ELSE 'FAIL'
+       END AS RESULT
+FROM STUDENT;
+```
